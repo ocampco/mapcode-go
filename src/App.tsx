@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import DensoMapcodeService from './services/DensoMapcodeService';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
@@ -9,6 +10,9 @@ const App = () => {
     e.preventDefault();
     console.log("🔥 inputLatitude=", inputLatitude);
     console.log("🔥 inputLongitude=", inputLongitude);
+    
+    const mapcode = DensoMapcodeService.mapCode(inputLatitude, inputLongitude);
+    console.log("🔥 mapcode=", mapcode);
   };
 
   return (
