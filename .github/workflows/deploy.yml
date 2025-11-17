@@ -38,6 +38,8 @@ jobs:
           cache: 'pnpm'
       - name: Install pnpm
         uses: pnpm/action-setup@v3
+        with:
+          version: latest
       - name: Install dependencies
         run: pnpm install
       - name: Build
