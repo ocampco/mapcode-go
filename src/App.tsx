@@ -46,7 +46,7 @@ const App = () => {
             <div className="grid gap-2">
               <Label>Latitude</Label>
               <Input
-                type="text"
+                type="number"
                 required
                 value={inputLatitude}
                 onChange={(e) => setInputLatitude(e.target.value)}
@@ -57,7 +57,7 @@ const App = () => {
             <div className="grid gap-2">
               <Label>Longitude</Label>
               <Input
-                type="text"
+                type="number"
                 required
                 value={inputLongitude}
                 onChange={(e) => setInputLongitude(e.target.value)}
