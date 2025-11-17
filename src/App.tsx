@@ -41,7 +41,7 @@ const App = () => {
   return (
     <>
       <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
-        Mapcode GO
+        🇯🇵 Mapcode GO
       </h1>
       <p className="text-muted-foreground text-xl mb-4">
         Driving through Japan made easy
@@ -49,7 +49,7 @@ const App = () => {
 
       <Card className="w-full max-w-sm mx-auto text-left mb-4">
         <CardHeader>
-          <CardTitle>Mapcode using coordinates</CardTitle>
+          <CardTitle>Mapcode using coordinates 📍</CardTitle>
           <CardDescription>Enter the latitude and longitude of the location you want to find the mapcode for</CardDescription>
         </CardHeader>
         <CardContent>
@@ -80,14 +80,14 @@ const App = () => {
         </CardContent>
         <CardFooter>
           <Button type="button" className="w-full" onClick={handleMapcodeFromCoordinates}>
-            GO get Mapcode
+            GO get mapcode
           </Button>
         </CardFooter>
       </Card>
 
       <Card className="w-full max-w-sm mx-auto text-left">
         <CardHeader>
-          <CardTitle>Mapcode using Google Maps Link</CardTitle>
+          <CardTitle>Mapcode using Google Maps link 🔗</CardTitle>
           <CardDescription>Enter the link of the location you want to find the mapcode for</CardDescription>
         </CardHeader>
         <CardContent>
@@ -106,8 +106,8 @@ const App = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="button" className="w-full" onClick={handleMapcodeFromGoogleMapsLink}>
-            GO get Mapcode
+          <Button type="button" className="w-full" disabled={true} onClick={handleMapcodeFromGoogleMapsLink}>
+            Coming soon
           </Button>
         </CardFooter>
       </Card>
