@@ -1,35 +1,43 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [inputLatitude, setInputLatitude] = useState<string>('');
+  const [inputLongitude, setInputLongitude] = useState<string>('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("🔥 inputLatitude=", inputLatitude);
+    console.log("🔥 inputLongitude=", inputLongitude);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <form onSubmit={handleSubmit}>
+      <label>
+        Latitude
+        <input
+          type="text"
+          required
+          value={inputLatitude}
+          onChange={(e) => setInputLatitude(e.target.value)}
+          placeholder="Enter latitude (e.g. 40.7128)"
+          autoComplete="off"
+        />
+      </label>
+      <label>
+        Longitude
+        <input
+          type="text"
+          required
+          value={inputLongitude}
+          onChange={(e) => setInputLongitude(e.target.value)}
+          placeholder="Enter longitude (e.g. -74.0060)"
+          autoComplete="off"
+        />
+      </label>
+      <button type="submit">Search</button>
+    </form>
+  );
+};
 
-export default App
+export default App;
