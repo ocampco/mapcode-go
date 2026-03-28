@@ -1,13 +1,27 @@
-export const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
+// TODO: Extract to .env
+const API_URL = 'https://dark-glitter-fb94.ocampco.workers.dev';
+
+const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
     try {
-        const response = await fetch(shortUrl, { method: 'HEAD', redirect: 'follow' });
+        const response = await fetch(
+            API_URL,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: shortUrl })
+            }
+        );
 
-        console.log("🔥 response=", response);
+        const data = await response.json();
 
-        return response.url;
+        return data.url;
     } catch (err) {
         console.error("Failed to expand URL:", err);
 
         return null;
     }
+}
+
+export default {
+    expandShortUrl
 }

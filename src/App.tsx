@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import DensoMapcodeService from './services/DensoMapcodeService';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './components/ui/input';
-import { expandShortUrl } from './services/GoogleMapsLinkService';
+import GoogleMapsLinkService from './services/GoogleMapsLinkService';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
@@ -29,12 +29,10 @@ const App = () => {
     console.log("🔥 mapcode=", mapcode);
   };
 
-  // TODO: Move to server
   const handleMapcodeFromGoogleMapsLink = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("🔥 inputGoogleMapsLink=", inputGoogleMapsLink);
 
-    const expandedUrl = await expandShortUrl(inputGoogleMapsLink);
+    const expandedUrl = await GoogleMapsLinkService.expandShortUrl(inputGoogleMapsLink);
     console.log("🔥 expandedUrl=", expandedUrl);
   };
 
@@ -106,8 +104,8 @@ const App = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="button" className="w-full" disabled={true} onClick={handleMapcodeFromGoogleMapsLink}>
-            Coming soon
+          <Button type="button" className="w-full" onClick={handleMapcodeFromGoogleMapsLink}>
+            GO get mapcode
           </Button>
         </CardFooter>
       </Card>
