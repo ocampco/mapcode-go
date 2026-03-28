@@ -33,17 +33,11 @@ const App = () => {
     e.preventDefault();
 
     // TODO: Handle errors
-    const expandedUrl = await GoogleMapsLinkService.expandShortUrl(inputGoogleMapsLink);
-    console.log("🔥 expandedUrl=", expandedUrl);
-
-    if (expandedUrl) {
-      const coordinates = GoogleMapsLinkService.extractCoordinatesFromExpandedUrl(expandedUrl);
+    try {
+      const coordinates = await GoogleMapsLinkService.getCoordinatesFromUrl(inputGoogleMapsLink);
       console.log("🔥 coordinates=", coordinates);
-
-      if (coordinates) {
-        const mapcode = DensoMapcodeService.mapCode(coordinates.latitude, coordinates.longitude);
-        console.log("🔥 mapcode=", mapcode);
-      }
+    } catch (error) {
+      console.error("🔥 error=", error);
     }
   };
 

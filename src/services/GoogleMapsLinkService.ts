@@ -1,6 +1,27 @@
 // TODO: Extract to .env
 const API_URL = 'https://dark-glitter-fb94.ocampco.workers.dev';
 
+// TODO: Extract to constants
+enum GoogleMapsUrlType {
+  SHORT = 'short',
+  FULL = 'full',
+  INVALID = 'invalid',
+}
+
+const SHORT_URL_PREFIXES = [
+'https://maps.app.goo.gl/',
+'https://goo.gl/maps/',
+'https://goo.gl/app/maps/',
+];
+const FULL_URL_REGEX = /^https:\/\/(www\.)?(maps\.google\.|google\.[a-z.]{2,6}\/maps)/
+
+const getUrlType = (url: string): GoogleMapsUrlType => {
+  if (SHORT_URL_PREFIXES.some(prefix => url.startsWith(prefix))) return GoogleMapsUrlType.SHORT;
+  if (FULL_URL_REGEX.test(url)) return GoogleMapsUrlType.FULL;
+
+  return GoogleMapsUrlType.INVALID;
+}
+
 const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
     try {
         const response = await fetch(
@@ -41,7 +62,26 @@ const extractCoordinatesFromExpandedUrl = (expandedUrl: string): Coordinates | n
     return null;
 }
 
+const getCoordinatesFromUrl = async (url: string): Promise<Coordinates | null> => {
+  const urlType = getUrlType(url);
+
+  if (urlType === GoogleMapsUrlType.INVALID) {
+    return null;
+  }
+
+  if (urlType === GoogleMapsUrlType.FULL) {
+    return extractCoordinatesFromExpandedUrl(url);
+  }
+
+  if (urlType === GoogleMapsUrlType.SHORT) {
+    const expandedUrl = await expandShortUrl(url);
+
+    if (expandedUrl) return extractCoordinatesFromExpandedUrl(expandedUrl);
+  }
+
+  return null;
+}
+
 export default {
-    expandShortUrl,
-    extractCoordinatesFromExpandedUrl,
+    getCoordinatesFromUrl
 }
