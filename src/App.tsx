@@ -12,12 +12,13 @@ import { Button } from '@/components/ui/button'
 import DensoMapcodeService from './services/DensoMapcodeService';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './components/ui/input';
-import GoogleMapsLinkService from './services/GoogleMapsLinkService';
+import { useCoordinatesFromUrl } from './hooks/useCoordinatesFromUrl';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
   const [inputLongitude, setInputLongitude] = useState<string>('');
   const [inputGoogleMapsLink, setInputGoogleMapsLink] = useState<string>('');
+  const { getCoordinates, coordinates, isLoading, error } = useCoordinatesFromUrl();
 
   // TODO: Move to server
   const handleMapcodeFromCoordinates = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,12 +33,10 @@ const App = () => {
   const handleMapcodeFromGoogleMapsLink = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    try {
-      const coordinates = await GoogleMapsLinkService.getCoordinatesFromUrl(inputGoogleMapsLink);
-      console.log("🔥 coordinates=", coordinates);
-    } catch (error) {
-      console.error("🔥 error=", error);
-    }
+    await getCoordinates(inputGoogleMapsLink);
+    console.log("🔥 coordinates=", coordinates);
+    console.log("🔥 isLoading=", isLoading);
+    console.log("🔥 error=", error);
   };
 
   return (
@@ -108,7 +107,7 @@ const App = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="button" className="w-full" onClick={handleMapcodeFromGoogleMapsLink}>
+          <Button type="button" disabled={isLoading} className="w-full" onClick={handleMapcodeFromGoogleMapsLink}>
             GO get mapcode
           </Button>
         </CardFooter>
