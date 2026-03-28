@@ -1,7 +1,10 @@
-import { FULL_URL_COORDINATES_REGEXES, FULL_URL_REGEX, GoogleMapsUrlType, SHORT_URL_PREFIXES } from "./GoogleMapsLinkService.config";
-
-// TODO: Extract to .env
-const API_URL = 'https://dark-glitter-fb94.ocampco.workers.dev';
+import {
+    FULL_URL_COORDINATES_REGEXES,
+    FULL_URL_REGEX,
+    GOOGLE_MAPS_LINK_EXPAND_API_URL,
+    GoogleMapsUrlType,
+    SHORT_URL_PREFIXES,
+} from "./GoogleMapsLinkService.config";
 
 const getUrlType = (url: string): GoogleMapsUrlType => {
   if (SHORT_URL_PREFIXES.some(prefix => url.startsWith(prefix))) return GoogleMapsUrlType.SHORT;
@@ -13,7 +16,7 @@ const getUrlType = (url: string): GoogleMapsUrlType => {
 const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
     try {
         const response = await fetch(
-            API_URL,
+            GOOGLE_MAPS_LINK_EXPAND_API_URL,
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -45,10 +48,6 @@ const extractCoordinatesFromExpandedUrl = (expandedUrl: string): Coordinates | n
 
 const getCoordinatesFromUrl = async (url: string): Promise<Coordinates | null> => {
   const urlType = getUrlType(url);
-
-  if (urlType === GoogleMapsUrlType.INVALID) {
-    return null;
-  }
 
   if (urlType === GoogleMapsUrlType.FULL) {
     return extractCoordinatesFromExpandedUrl(url);
