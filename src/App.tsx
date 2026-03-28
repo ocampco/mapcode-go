@@ -32,7 +32,6 @@ const App = () => {
   const handleMapcodeFromGoogleMapsLink = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    // TODO: Handle errors
     try {
       const coordinates = await GoogleMapsLinkService.getCoordinatesFromUrl(inputGoogleMapsLink);
       console.log("🔥 coordinates=", coordinates);

@@ -13,7 +13,7 @@ const getUrlType = (url: string): GoogleMapsUrlType => {
   return GoogleMapsUrlType.INVALID;
 }
 
-const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
+const expandShortUrl = async (shortUrl: string): Promise<Error | string> => {
     try {
         const response = await fetch(
             GOOGLE_MAPS_LINK_EXPAND_API_URL,
@@ -27,26 +27,22 @@ const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
         const data = await response.json();
 
         return data.url;
-    } catch (err) {
-        console.error("Failed to expand URL:", err);
-
-        return null;
+    } catch (error) {
+        throw new Error(`Failed to expand URL: ${shortUrl}`, { cause: error});
     }
 }
 
-const extractCoordinatesFromExpandedUrl = (expandedUrl: string): Coordinates | null => {
+const extractCoordinatesFromExpandedUrl = (expandedUrl: string): Error | Coordinates => {
   for (const regex of FULL_URL_COORDINATES_REGEXES) {
     const match = expandedUrl.match(regex);
 
     if (match) return { latitude: parseFloat(match[1]), longitude: parseFloat(match[2]) };
   }
 
-    console.error("Failed to extract coordinates from expanded URL:", expandedUrl);
-
-    return null;
+  throw new Error(`Failed to extract coordinates from expanded URL: ${expandedUrl}`);
 }
 
-const getCoordinatesFromUrl = async (url: string): Promise<Coordinates | null> => {
+const getCoordinatesFromUrl = async (url: string): Promise<Error | Coordinates> => {
   const urlType = getUrlType(url);
 
   if (urlType === GoogleMapsUrlType.FULL) {
@@ -59,7 +55,7 @@ const getCoordinatesFromUrl = async (url: string): Promise<Coordinates | null> =
     if (expandedUrl) return extractCoordinatesFromExpandedUrl(expandedUrl);
   }
 
-  return null;
+  throw new Error(`Invalid Google Maps URL: ${url}`);
 }
 
 export default {
