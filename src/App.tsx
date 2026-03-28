@@ -39,6 +39,11 @@ const App = () => {
     if (expandedUrl) {
       const coordinates = GoogleMapsLinkService.extractCoordinatesFromExpandedUrl(expandedUrl);
       console.log("🔥 coordinates=", coordinates);
+
+      if (coordinates) {
+        const mapcode = DensoMapcodeService.mapCode(coordinates.latitude, coordinates.longitude);
+        console.log("🔥 mapcode=", mapcode);
+      }
     }
   };
 
