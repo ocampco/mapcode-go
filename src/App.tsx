@@ -32,8 +32,14 @@ const App = () => {
   const handleMapcodeFromGoogleMapsLink = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
+    // TODO: Handle errors
     const expandedUrl = await GoogleMapsLinkService.expandShortUrl(inputGoogleMapsLink);
     console.log("🔥 expandedUrl=", expandedUrl);
+
+    if (expandedUrl) {
+      const coordinates = GoogleMapsLinkService.extractCoordinatesFromExpandedUrl(expandedUrl);
+      console.log("🔥 coordinates=", coordinates);
+    }
   };
 
   return (

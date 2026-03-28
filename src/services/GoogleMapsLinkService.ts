@@ -22,6 +22,26 @@ const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
     }
 }
 
+const extractCoordinatesFromExpandedUrl = (expandedUrl: string): Coordinates | null => {
+  const patterns: RegExp[] = [
+    /[?&]q=([\d.-]+),([\d.-]+)/,       // ?q=lat,lng
+    /\/@([\d.-]+),([\d.-]+)/,           // /@lat,lng
+    /!3d([\d.-]+)!4d([\d.-]+)/,        // !3d lat !4d lng
+    /place\/([\d.-]+),([\d.-]+)/,       // place/lat,lng
+  ];
+
+  for (const pattern of patterns) {
+    const match = expandedUrl.match(pattern);
+
+    if (match) return { latitude: parseFloat(match[1]), longitude: parseFloat(match[2]) };
+  }
+
+    console.error("Failed to extract coordinates from expanded URL:", expandedUrl);
+
+    return null;
+}
+
 export default {
-    expandShortUrl
+    expandShortUrl,
+    extractCoordinatesFromExpandedUrl,
 }
