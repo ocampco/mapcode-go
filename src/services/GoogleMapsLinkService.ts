@@ -1,19 +1,7 @@
+import { FULL_URL_COORDINATES_REGEXES, FULL_URL_REGEX, GoogleMapsUrlType, SHORT_URL_PREFIXES } from "./GoogleMapsLinkService.config";
+
 // TODO: Extract to .env
 const API_URL = 'https://dark-glitter-fb94.ocampco.workers.dev';
-
-// TODO: Extract to constants
-enum GoogleMapsUrlType {
-  SHORT = 'short',
-  FULL = 'full',
-  INVALID = 'invalid',
-}
-
-const SHORT_URL_PREFIXES = [
-'https://maps.app.goo.gl/',
-'https://goo.gl/maps/',
-'https://goo.gl/app/maps/',
-];
-const FULL_URL_REGEX = /^https:\/\/(www\.)?(maps\.google\.|google\.[a-z.]{2,6}\/maps)/
 
 const getUrlType = (url: string): GoogleMapsUrlType => {
   if (SHORT_URL_PREFIXES.some(prefix => url.startsWith(prefix))) return GoogleMapsUrlType.SHORT;
@@ -44,15 +32,8 @@ const expandShortUrl = async (shortUrl: string): Promise<string | null> => {
 }
 
 const extractCoordinatesFromExpandedUrl = (expandedUrl: string): Coordinates | null => {
-  const patterns: RegExp[] = [
-    /[?&]q=([\d.-]+),([\d.-]+)/,       // ?q=lat,lng
-    /\/@([\d.-]+),([\d.-]+)/,           // /@lat,lng
-    /!3d([\d.-]+)!4d([\d.-]+)/,        // !3d lat !4d lng
-    /place\/([\d.-]+),([\d.-]+)/,       // place/lat,lng
-  ];
-
-  for (const pattern of patterns) {
-    const match = expandedUrl.match(pattern);
+  for (const regex of FULL_URL_COORDINATES_REGEXES) {
+    const match = expandedUrl.match(regex);
 
     if (match) return { latitude: parseFloat(match[1]), longitude: parseFloat(match[2]) };
   }
