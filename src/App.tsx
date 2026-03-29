@@ -14,11 +14,14 @@ import { Label } from '@radix-ui/react-label';
 import { Input } from './components/ui/input';
 import { useCoordinatesFromUrl } from './hooks/useCoordinatesFromUrl';
 import { Spinner } from './components/ui/spinner';
+import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
+import { CircleAlert } from 'lucide-react';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
   const [inputLongitude, setInputLongitude] = useState<string>('');
   const [inputGoogleMapsLink, setInputGoogleMapsLink] = useState<string>('');
+  const [mapcodeResult, setMapcodeResult] = useState<string>('');
   const { getCoordinates, coordinates, isLoading, error } = useCoordinatesFromUrl();
 
   // TODO: Move to server
@@ -35,9 +38,10 @@ const App = () => {
     e.preventDefault();
 
     await getCoordinates(inputGoogleMapsLink);
-    console.log("🔥 coordinates=", coordinates);
-    console.log("🔥 isLoading=", isLoading);
-    console.log("🔥 error=", error);
+
+    const mapcode = DensoMapcodeService.mapCode(coordinates?.latitude, coordinates?.longitude);
+
+    setMapcodeResult(mapcode);
   };
 
   return (
@@ -48,6 +52,14 @@ const App = () => {
       <p className="text-muted-foreground text-xl mb-4">
         Driving through Japan made easy
       </p>
+
+      {error && <Alert className="w-full max-w-sm mx-auto text-left mb-4">
+        <CircleAlert />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          {error}
+        </AlertDescription>
+      </Alert>}
 
       <Card className="w-full max-w-sm mx-auto text-left mb-4">
         <CardHeader>
@@ -87,7 +99,7 @@ const App = () => {
         </CardFooter>
       </Card>
 
-      <Card className="w-full max-w-sm mx-auto text-left">
+      <Card className="w-full max-w-sm mx-auto text-left mb-4">
         <CardHeader>
           <CardTitle>Mapcode using Google Maps link 🔗</CardTitle>
           <CardDescription>Enter the link of the location you want to find the mapcode for</CardDescription>
@@ -114,6 +126,12 @@ const App = () => {
           </Button>
         </CardFooter>
       </Card>
+
+      {mapcodeResult && <Card className="w-full max-w-sm mx-auto text-left">
+        <CardHeader>
+          <CardTitle>Your mapcode is: {mapcodeResult}</CardTitle>
+        </CardHeader>
+      </Card>}
     </>
   );
 };
