@@ -42,7 +42,7 @@ const getCoordinatesFromUrl = async (url: string): Promise<Coordinates> => {
 export const useCoordinatesFromUrl = (url: string) => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
      if (!url) return;

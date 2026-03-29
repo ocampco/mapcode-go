@@ -3,7 +3,7 @@ import { Card } from "./ui/card";
 
 type ResultProps = {
     coordinates: Coordinates | null;
-    mapcode?: string;
+    mapcode: string | null;
 }
 
 export const Result = ({ coordinates, mapcode }: ResultProps) => {
