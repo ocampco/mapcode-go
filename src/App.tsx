@@ -17,6 +17,7 @@ import { Spinner } from './components/ui/spinner';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { CircleAlert } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router';
+import { Result } from './components/Result';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
@@ -153,19 +154,7 @@ const App = () => {
         </CardFooter>
       </Card>
 
-      {mapcodeResult && !error && <Card className="relative mx-auto w-full max-w-sm pt-0">
-        <div className="absolute inset-0 z-30 aspect-video" />
-        <iframe
-          src={`https://www.google.com/maps?q=${coordinates?.latitude},${coordinates?.longitude}&z=15&output=embed`}
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen={true}
-          loading="lazy" />
-        <CardHeader>
-          <CardTitle>Your mapcode is: {mapcodeResult}</CardTitle>
-        </CardHeader>
-      </Card>}
+      {mapcodeResult && coordinates && <Result coordinates={coordinates} mapcode={mapcodeResult} />}
     </>
   );
 };
