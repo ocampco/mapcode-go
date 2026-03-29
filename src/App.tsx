@@ -127,7 +127,15 @@ const App = () => {
         </CardFooter>
       </Card>
 
-      {mapcodeResult && <Card className="w-full max-w-sm mx-auto text-left">
+      {mapcodeResult && !error && <Card className="relative mx-auto w-full max-w-sm pt-0">
+        <div className="absolute inset-0 z-30 aspect-video" />
+        <iframe
+          src={`https://www.google.com/maps?q=${coordinates?.latitude},${coordinates?.longitude}&z=15&output=embed`}
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen={true}
+          loading="lazy" />
         <CardHeader>
           <CardTitle>Your mapcode is: {mapcodeResult}</CardTitle>
         </CardHeader>
