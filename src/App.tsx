@@ -24,14 +24,12 @@ const App = () => {
   const [mapcodeResult, setMapcodeResult] = useState<string>('');
   const { getCoordinates, coordinates, isLoading, error } = useCoordinatesFromUrl();
 
-  // TODO: Move to server
-  const handleMapcodeFromCoordinates = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMapcodeFromCoordinates = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("🔥 inputLatitude=", inputLatitude);
-    console.log("🔥 inputLongitude=", inputLongitude);
 
-    const mapcode = DensoMapcodeService.mapCode(inputLatitude, inputLongitude);
-    console.log("🔥 mapcode=", mapcode);
+    const mapcode = await DensoMapcodeService.getMapCode(inputLatitude, inputLongitude);
+
+    setMapcodeResult(mapcode);
   };
 
   const handleMapcodeFromGoogleMapsLink = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,9 +37,11 @@ const App = () => {
 
     await getCoordinates(inputGoogleMapsLink);
 
-    const mapcode = DensoMapcodeService.mapCode(coordinates?.latitude, coordinates?.longitude);
+    if (coordinates) {
+      const mapcode = await DensoMapcodeService.getMapCode(coordinates.latitude, coordinates.longitude);
 
-    setMapcodeResult(mapcode);
+      setMapcodeResult(mapcode);
+    }
   };
 
   return (

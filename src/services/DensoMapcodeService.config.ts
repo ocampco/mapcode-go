@@ -1,0 +1,1 @@
+export const DENSO_MAPCODE_API_URL = 'https://small-firefly-34d7.ocampco.workers.dev/';
