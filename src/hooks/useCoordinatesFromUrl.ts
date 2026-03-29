@@ -1,5 +1,5 @@
 import GoogleMapsLinkService from "@/services/GoogleMapsLinkService";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FULL_URL_COORDINATES_REGEXES, GoogleMapsUrlType } from "./useCoordinatesFromUrl.config";
 import { FULL_URL_REGEX } from "./useCoordinatesFromUrl.config";
 import { SHORT_URL_PREFIXES } from "./useCoordinatesFromUrl.config";
@@ -16,7 +16,7 @@ const extractCoordinatesFromExpandedUrl = (expandedUrl: string): Coordinates => 
     const match = expandedUrl.match(regex);
 
     if (match) {
-      return { latitude: match[1], longitude: match[2] };
+      return { latitude: match[1], longitude: match[2], zoom: match[3] };
     }
   }
 

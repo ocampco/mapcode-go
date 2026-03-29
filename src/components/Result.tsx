@@ -15,7 +15,7 @@ export const Result = ({ coordinates, mapcode }: ResultProps) => {
         <Card className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden">
             <div className="absolute inset-0 z-30 aspect-video" />
             <iframe
-                src={`https://www.google.com/maps?q=${coordinates?.latitude},${coordinates?.longitude}&z=15&output=embed`}
+                src={`https://www.google.com/maps?q=${coordinates?.latitude},${coordinates?.longitude}&z=${coordinates?.zoom || 15}&output=embed`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

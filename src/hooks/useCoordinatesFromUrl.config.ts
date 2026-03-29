@@ -7,8 +7,8 @@ export const SHORT_URL_PREFIXES = [
 export const FULL_URL_REGEX = /^https:\/\/(www\.)?(maps\.google\.|google\.[a-z.]{2,6}\/maps)/
 
 export const FULL_URL_COORDINATES_REGEXES = [
-    /[?&]q=([\d.-]+),([\d.-]+)/,
-    /\/@([\d.-]+),([\d.-]+)/,
+    /[?&]q=([\d.-]+),([\d.-]+)(?:&z=(\d+))?/,
+    /\/@([\d.-]+),([\d.-]+),(\d+)z/,
     /!3d([\d.-]+)!4d([\d.-]+)/,
     /place\/([\d.-]+),([\d.-]+)/,
 ]

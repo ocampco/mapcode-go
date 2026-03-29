@@ -1,1 +1,1 @@
-type Coordinates = { latitude: string; longitude: string; }
+type Coordinates = { latitude: string; longitude: string; zoom?: string; }
