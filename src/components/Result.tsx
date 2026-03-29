@@ -12,7 +12,7 @@ export const Result = ({ coordinates, mapcode }: ResultProps) => {
     }
 
     return (
-        <Card className="relative mx-auto w-full max-w-sm pt-0">
+        <Card className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden">
             <div className="absolute inset-0 z-30 aspect-video" />
             <iframe
                 src={`https://www.google.com/maps?q=${coordinates?.latitude},${coordinates?.longitude}&z=15&output=embed`}
