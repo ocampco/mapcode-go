@@ -46,7 +46,7 @@ const App = () => {
 
   return (
     <>
-      {error && <Alert className="w-full max-w-sm mx-auto text-left mb-4">
+      {error && <Alert>
         <CircleAlert />
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
@@ -54,7 +54,7 @@ const App = () => {
         </AlertDescription>
       </Alert>}
 
-      <Card className="w-full max-w-sm mx-auto text-left mb-4">
+      <Card>
         <CardHeader>
           <CardTitle>Mapcode using coordinates 📍</CardTitle>
           <CardDescription>Enter the latitude and longitude of the location you want to find the mapcode for</CardDescription>
@@ -92,7 +92,7 @@ const App = () => {
         </CardFooter>
       </Card>
 
-      <Card className="w-full max-w-sm mx-auto text-left mb-4">
+      <Card >
         <CardHeader>
           <CardTitle>Mapcode using Google Maps link 🔗</CardTitle>
           <CardDescription>Enter the link of the location you want to find the mapcode for</CardDescription>
