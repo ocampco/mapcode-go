@@ -22,7 +22,8 @@ export const Result = ({ coordinates, mapcode }: ResultProps) => {
                 allowFullScreen={true}
                 loading="lazy" />
             <CardHeader>
-                <CardTitle>Your mapcode is: {mapcode}</CardTitle>
+                <CardTitle>🚗 Your mapcode is:</CardTitle>
+                <div className="text-3xl font-extrabold text-center text-balance">{mapcode}</div>
             </CardHeader>
         </Card>
     )

@@ -51,7 +51,7 @@ export const LinkSearch = () => {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" disabled={isLoading || !inputLink} className="w-full" onClick={handleSearch}>
+            <Button size="lg" type="submit" disabled={isLoading || !inputLink} className="w-full" onClick={handleSearch}>
               {isLoading && <Spinner data-icon="inline-start" />}
               GO get mapcode
             </Button>
