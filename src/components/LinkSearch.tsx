@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useCoordinatesFromUrl } from "@/hooks/useCoordinatesFromUrl";
 
 export const LinkSearch = () => {
-  const [inputGoogleMapsLink, setInputGoogleMapsLink] = useState<string>('');
+  const [inputLink, setInputLink] = useState<string>('');
   const [mapcodeResult, setMapcodeResult] = useState<string>('');
   const [searchParams] = useSearchParams();
   const { getCoordinates, coordinates, isLoading, error } = useCoordinatesFromUrl();
@@ -17,7 +17,7 @@ export const LinkSearch = () => {
 
   useEffect(() => {
     const getMapcodeFromLink = async (link: string) => {
-      setInputGoogleMapsLink(link);
+      setInputLink(link);
 
       await getCoordinates(link);
 
@@ -53,8 +53,8 @@ export const LinkSearch = () => {
               <Input
                 type="text"
                 required
-                value={inputGoogleMapsLink}
-                onChange={(e) => setInputGoogleMapsLink(e.target.value)}
+                value={inputLink}
+                onChange={(e) => setInputLink(e.target.value)}
                 placeholder="e.g. https://maps.app.goo.gl/BwMn67pGKoqUsz5m6"
                 autoComplete="off"
               />
@@ -62,7 +62,7 @@ export const LinkSearch = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="button" disabled={isLoading} className="w-full" onClick={() => navigate(`/?link=${inputGoogleMapsLink}`)}>
+          <Button type="button" disabled={isLoading || !inputLink} className="w-full" onClick={() => navigate(`/?link=${inputLink}`)}>
             {isLoading && <Spinner data-icon="inline-start" />}
             GO get mapcode
           </Button>
