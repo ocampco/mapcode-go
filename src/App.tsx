@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import {
   Card,
@@ -16,6 +16,7 @@ import { useCoordinatesFromUrl } from './hooks/useCoordinatesFromUrl';
 import { Spinner } from './components/ui/spinner';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { CircleAlert } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
@@ -23,26 +24,54 @@ const App = () => {
   const [inputGoogleMapsLink, setInputGoogleMapsLink] = useState<string>('');
   const [mapcodeResult, setMapcodeResult] = useState<string>('');
   const { getCoordinates, coordinates, isLoading, error } = useCoordinatesFromUrl();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const handleMapcodeFromCoordinates = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  useEffect(() => {
+    const getMapcodeFromCoordinates = async (latitude: string, longitude: string) => {
+      setInputLatitude(latitude);
+      setInputLongitude(longitude);
 
-    const mapcode = await DensoMapcodeService.getMapCode(inputLatitude, inputLongitude);
-
-    setMapcodeResult(mapcode);
-  };
-
-  const handleMapcodeFromGoogleMapsLink = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    await getCoordinates(inputGoogleMapsLink);
-
-    if (coordinates) {
-      const mapcode = await DensoMapcodeService.getMapCode(coordinates.latitude, coordinates.longitude);
+      const mapcode = await DensoMapcodeService.getMapCode(latitude, longitude);
 
       setMapcodeResult(mapcode);
     }
-  };
+
+    if (!mapcodeResult || error) {
+      return;
+    }
+
+    const latitude = searchParams.get('latitude');
+    const longitude = searchParams.get('longitude');
+
+    if (latitude && longitude) {
+      getMapcodeFromCoordinates(latitude, longitude);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const getMapcodeFromLink = async (link: string) => {
+      setInputGoogleMapsLink(link);
+
+      await getCoordinates(link);
+
+      if (coordinates) {
+        const mapcode = await DensoMapcodeService.getMapCode(coordinates.latitude, coordinates.longitude);
+
+        setMapcodeResult(mapcode);
+      }
+    }
+
+    if (mapcodeResult || error) {
+      return;
+    }
+
+    const link = searchParams.get('link');
+
+    if (link) {
+      getMapcodeFromLink(link);
+    }
+  }, [searchParams, mapcodeResult, error]);
 
   return (
     <>
@@ -86,7 +115,11 @@ const App = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="button" className="w-full" onClick={handleMapcodeFromCoordinates}>
+          <Button
+            type="button"
+            className="w-full"
+            onClick={() => navigate(`/?latitude=${inputLatitude}&longitude=${inputLongitude}`)}
+          >
             GO get mapcode
           </Button>
         </CardFooter>
@@ -113,7 +146,7 @@ const App = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="button" disabled={isLoading} className="w-full" onClick={handleMapcodeFromGoogleMapsLink}>
+          <Button type="button" disabled={isLoading} className="w-full" onClick={() => navigate(`/?link=${inputGoogleMapsLink}`)}>
             {isLoading && <Spinner data-icon="inline-start" />}
             GO get mapcode
           </Button>
