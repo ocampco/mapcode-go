@@ -1,5 +1,5 @@
 import GoogleMapsLinkService from "@/services/GoogleMapsLinkService";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FULL_URL_COORDINATES_REGEXES, GoogleMapsUrlType } from "./useCoordinatesFromUrl.config";
 import { FULL_URL_REGEX } from "./useCoordinatesFromUrl.config";
 import { SHORT_URL_PREFIXES } from "./useCoordinatesFromUrl.config";
@@ -39,27 +39,34 @@ const getCoordinatesFromUrl = async (url: string): Promise<Coordinates> => {
   return extractCoordinatesFromExpandedUrl(expandedUrl);
 }
 
-export const useCoordinatesFromUrl = () => {
+export const useCoordinatesFromUrl = (url: string) => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getCoordinates = async (url: string) => {
-    setError(null);
-    setIsLoading(true);
+  useEffect(() => {
+     if (!url) return;
 
-    try {
-      const result  = await getCoordinatesFromUrl(url);
+    const getCoordinates = async (url: string) => {
+      try {
+        setIsLoading(true);
+        setCoordinates(null);
+        setError(null);
 
-      setCoordinates(result);
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
+        const result = await getCoordinatesFromUrl(url);
+
+        setCoordinates(result);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  return { getCoordinates, coordinates, isLoading, error };
+    getCoordinates(url);
+  }, [url]);
+
+  return { coordinates, isLoading, error };
 };

@@ -7,20 +7,19 @@ import { Spinner } from "./ui/spinner";
 import { useNavigate, useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useCoordinatesFromUrl } from "@/hooks/useCoordinatesFromUrl";
+import { Result } from "./Result";
+import { ErrorAlert } from "./ErrorAlert";
 
 export const LinkSearch = () => {
-  const [inputLink, setInputLink] = useState<string>('');
-  const [mapcodeResult, setMapcodeResult] = useState<string>('');
   const [searchParams] = useSearchParams();
-  const { getCoordinates, coordinates, isLoading, error } = useCoordinatesFromUrl();
+  const searchLink = searchParams.get('link');
+  const [inputLink, setInputLink] = useState<string>(searchLink || '');
+  const [mapcodeResult, setMapcodeResult] = useState<string>('');
+  const { coordinates, isLoading, error } = useCoordinatesFromUrl(searchLink || '');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getMapcodeFromLink = async (link: string) => {
-      setInputLink(link);
-
-      await getCoordinates(link);
-
+    const getMapcodeFromLink = async () => {
       if (coordinates) {
         // TODO: Handle error
         const mapcode = await DensoMapcodeService.getMapCode(coordinates.latitude, coordinates.longitude);
@@ -29,44 +28,52 @@ export const LinkSearch = () => {
       }
     }
 
-    if (mapcodeResult || error) {
+    if (mapcodeResult || error) return;
+    if (searchLink) getMapcodeFromLink();
+
+  }, [searchParams, mapcodeResult, error, inputLink, searchLink, coordinates]);
+
+  const handleSearch = () => {
+    const isPendingSearch = inputLink.trim() !== searchParams.get('link');
+    
+    if (!isPendingSearch) {
       return;
     }
 
-    const link = searchParams.get('link');
-
-    if (link) {
-      getMapcodeFromLink(link);
-    }
-  }, [searchParams, mapcodeResult, error]);
+    navigate(`/?link=${inputLink}`);
+  }
 
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Mapcode using Google Maps link 🔗</CardTitle>
-          <CardDescription>Enter the link of the location you want to find the mapcode for</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-              <Label>Google Maps Link</Label>
-              <Input
-                type="text"
-                required
-                value={inputLink}
-                onChange={(e) => setInputLink(e.target.value)}
-                placeholder="e.g. https://maps.app.goo.gl/BwMn67pGKoqUsz5m6"
-                autoComplete="off"
-              />
+      <>
+        <ErrorAlert error={error} />
+        <Card>
+          <CardHeader>
+            <CardTitle>Mapcode using Google Maps link 🔗</CardTitle>
+            <CardDescription>Enter the link of the location you want to find the mapcode for</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label>Google Maps Link</Label>
+                <Input
+                  type="text"
+                  required
+                  value={inputLink}
+                  onChange={(e) => setInputLink(e.target.value)}
+                  placeholder="e.g. https://maps.app.goo.gl/BwMn67pGKoqUsz5m6"
+                  autoComplete="off"
+                />
+              </div>
             </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="button" disabled={isLoading || !inputLink} className="w-full" onClick={() => navigate(`/?link=${inputLink}`)}>
-            {isLoading && <Spinner data-icon="inline-start" />}
-            GO get mapcode
-          </Button>
-        </CardFooter>
-      </Card>
+          </CardContent>
+          <CardFooter>
+            <Button type="button" disabled={isLoading || !inputLink} className="w-full" onClick={handleSearch}>
+              {isLoading && <Spinner data-icon="inline-start" />}
+              GO get mapcode
+            </Button>
+          </CardFooter>
+        </Card>
+        <Result coordinates={coordinates} mapcode={mapcodeResult} />
+      </>
     );
 };
