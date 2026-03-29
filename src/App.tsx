@@ -13,6 +13,7 @@ import DensoMapcodeService from './services/DensoMapcodeService';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './components/ui/input';
 import { useCoordinatesFromUrl } from './hooks/useCoordinatesFromUrl';
+import { Spinner } from './components/ui/spinner';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
@@ -108,6 +109,7 @@ const App = () => {
         </CardContent>
         <CardFooter>
           <Button type="button" disabled={isLoading} className="w-full" onClick={handleMapcodeFromGoogleMapsLink}>
+            {isLoading && <Spinner data-icon="inline-start" />}
             GO get mapcode
           </Button>
         </CardFooter>

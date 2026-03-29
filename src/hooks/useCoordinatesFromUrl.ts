@@ -49,7 +49,6 @@ export const useCoordinatesFromUrl = () => {
     setIsLoading(true);
 
     try {
-      console.log("🔥 url=", url);
       const result  = await getCoordinatesFromUrl(url);
 
       setCoordinates(result);
