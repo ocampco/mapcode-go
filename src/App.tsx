@@ -14,10 +14,9 @@ import { Label } from '@radix-ui/react-label';
 import { Input } from './components/ui/input';
 import { useCoordinatesFromUrl } from './hooks/useCoordinatesFromUrl';
 import { Spinner } from './components/ui/spinner';
-import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
-import { CircleAlert } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { Result } from './components/Result';
+import { ErrorAlert } from './components/ErrorAlert';
 
 const App = () => {
   const [inputLatitude, setInputLatitude] = useState<string>('');
@@ -76,13 +75,7 @@ const App = () => {
 
   return (
     <>
-      {error && <Alert>
-        <CircleAlert />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          {error}
-        </AlertDescription>
-      </Alert>}
+      <ErrorAlert error={error} />
 
       <Card>
         <CardHeader>
