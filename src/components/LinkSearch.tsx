@@ -1,19 +1,40 @@
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { useNavigate, useSearchParams } from "react-router";
 import { useState } from "react";
+import { Field, FieldDescription, FieldLabel } from "./ui/field";
 
-// TODO: Make reusable
+const isUrl = (link: string) => {
+  try {
+    new URL(link.trim());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export const LinkSearch = () => {
   const [searchParams] = useSearchParams();
   const searchLink = searchParams.get('link') || '';
   const [inputLink, setInputLink] = useState<string>(searchLink);
+  const [isValidLink, setIsValidLink] = useState<boolean>(false);
   const navigate = useNavigate();
+  const shouldShowError = !isValidLink && Boolean(inputLink.trim());
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputLink(e.target.value);
+    setIsValidLink(true);
+  }
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if(!isUrl(inputLink)) {
+      setIsValidLink(false);
+      return;
+    }
+
     navigate(`/search?link=${encodeURIComponent(inputLink.trim())}`);
   };
 
@@ -27,15 +48,22 @@ export const LinkSearch = () => {
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
-                    <Label>Google Maps Link</Label>
+                  <Field data-invalid={shouldShowError}>
+                    <FieldLabel htmlFor="link">
+                      Google Maps Link
+                    </FieldLabel>
                     <Input
+                      id="link"
                       type="text"
                       required
                       value={inputLink}
-                      onChange={(e) => setInputLink(e.target.value)}
+                      onChange={handleInputChange}
                       placeholder="e.g. https://maps.app.goo.gl/BwMn67pGKoqUsz5m6"
                       autoComplete="off"
+                      aria-invalid={shouldShowError}
                     />
+                    {shouldShowError && <FieldDescription>Please enter a valid Google Maps link.</FieldDescription>}
+                  </Field>
                 </div>
               </div>
             </form>
@@ -47,6 +75,7 @@ export const LinkSearch = () => {
               // TODO: Validate input
               disabled={!inputLink.trim()}
               className="w-full"
+              onClick={handleSubmit}
             >
               GO get mapcode
             </Button>
