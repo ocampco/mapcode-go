@@ -1,7 +1,7 @@
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useState } from "react";
 import { Field, FieldDescription, FieldLabel } from "./ui/field";
 
@@ -14,11 +14,12 @@ const isUrl = (link: string) => {
   }
 }
 
-export const LinkSearch = () => {
-  const [searchParams] = useSearchParams();
-  const searchLink = searchParams.get('link') || '';
-  const [inputLink, setInputLink] = useState<string>(searchLink);
-  const [isValidLink, setIsValidLink] = useState<boolean>(false);
+type LinkSearchProps = {
+  resultLink: string;
+}
+export const LinkSearch = ({ resultLink }: LinkSearchProps) => {
+  const [inputLink, setInputLink] = useState<string>(resultLink || '');
+  const [isValidLink, setIsValidLink] = useState<boolean>(isUrl(resultLink));
   const navigate = useNavigate();
   const shouldShowError = !isValidLink && Boolean(inputLink.trim());
 
@@ -72,7 +73,6 @@ export const LinkSearch = () => {
             <Button
               size="lg"
               type="submit"
-              // TODO: Validate input
               disabled={!inputLink.trim()}
               className="w-full"
               onClick={handleSubmit}

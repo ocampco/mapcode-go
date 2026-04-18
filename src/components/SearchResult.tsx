@@ -12,7 +12,7 @@ export const SearchResult = () => {
     return (
       <>
         <ErrorAlert error={error} />
-        <LinkSearch />
+        <LinkSearch resultLink={searchLink}/>
         <Result coordinates={coordinates} mapcode={mapcode} />
       </>
     );
